@@ -1,0 +1,69 @@
+/* 
+  Localizable.strings
+  LocateMe
+
+  Created by doudou on 8/17/14.
+  Copyright (c) 2014 larryhou. All rights reserved.
+*/
+
+/* Accuracy Levels */
+"AccuracyBest" = "最好";
+"Accuracy10" = "10米";
+"Accuracy100" = "100米";
+"Accuracy1000" = "1千米";
+"Accuracy3000" = "3千米";
+
+/* Location Status */
+"Updating" = "定位...";
+"Tracking" = "追踪...";
+"Timeout" = "超时";
+"Acquired Location" = "完成";
+"Error" = "错误";
+
+/* Section Labels */
+"Status" = "状态";
+"Best Measurement" = "最高精度定位";
+"All Measurements" = "所有定位";
+"Accuracy" = "定位精度";
+"Coordinate" = "坐标";
+"Altitude" = "海拔";
+"Movement" = "运动";
+"RTStats" = "实时数据";
+
+/* Location Value Labels */
+"coordinate" = "坐标";
+"latitude" = "纬度";
+"longitude" = "经度";
+"altitude" = "海拔";
+"horizontal" = "水平半径";
+"vertical" = "垂直高度";
+"course" = "方向";
+"speed" = "速度";
+"accuracy" = "精度";
+"time" = "时间";
+
+/* Data unavailable messages */
+"DataUnavailable" = "不可用";
+
+/* Formatting strings for location data output */
+"LatLongFormat" = "%.4f° %@, %.4f° %@";
+"LocationFormat" = "%.6f° %@";
+"AltitudeFormat" = "%@%.2f米";
+"AccuracyFormat" = "%.2f米";
+"CourseFormat" = "%.1f° 北向顺时针";
+"SpeedFormat" = "%.1f米/秒";
+"DateFormat" = "MM/dd/yyyy HH:mm:ss.SSS";
+
+/* Directions */
+"North" = "北";
+"South" = "南";
+"East" = "东";
+"West" = "西";
+"AboveSeaLevel" = "+";
+"BelowSeaLevel" = "-";
+
+/* Error messages */
+"NoLocationServices" = "Location services are not enabled.";
+"LocationDenied" = "Access to use your location was denied.";
+"LocationUnknown" = "Your location could not be determined.";
+"GenericLocationError" = "Unknown location error code:";
