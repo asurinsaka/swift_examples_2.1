@@ -4,6 +4,6 @@ I was trying to learn swift and to find some swift examples to learn from.  And 
 
 This one original from https://github.com/larryhou/swift is so far the best one I can find. But it is from swift 1. I do not know how to contribute to the original fork(maybe later  I would merge mine to it. For now I would just build in my own account.
 
-1. AutoLayout
+## AutoLayout
 
 ![Alt text](autolayout.png "Auto Layout")
