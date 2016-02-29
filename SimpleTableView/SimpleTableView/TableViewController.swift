@@ -32,7 +32,7 @@ class GroupTableViewController: UITableViewController
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        var key = _titles[section]
+        let key = _titles[section]
         return _dict[key]!.count
     }
 	
@@ -43,10 +43,10 @@ class GroupTableViewController: UITableViewController
 	
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        var cell = tableView.dequeueReusableCellWithIdentifier("TimeZoneCell") as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("TimeZoneCell")! as UITableViewCell
         
-        var key = _titles[indexPath.section]
-		(cell.viewWithTag(1) as UILabel).text = _dict[key]![indexPath.row].formattedString
+        let key = _titles[indexPath.section]
+		(cell.viewWithTag(1) as! UILabel).text = _dict[key]![indexPath.row].formattedString
         return cell
     }
     
@@ -56,7 +56,7 @@ class GroupTableViewController: UITableViewController
         return index
     }
     
-    override func sectionIndexTitlesForTableView(tableView: UITableView) -> [AnyObject]!
+    override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]?
     {
         return _titles
     }
@@ -105,8 +105,8 @@ class PlainTableViewController: UITableViewController
 	
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
 	{
-		var cell = tableView.dequeueReusableCellWithIdentifier("TimeZoneCell") as UITableViewCell
-		(cell.viewWithTag(1) as UILabel).text = _list[indexPath.row].formattedString
+		let cell = tableView.dequeueReusableCellWithIdentifier("TimeZoneCell")! as UITableViewCell
+		(cell.viewWithTag(1) as! UILabel).text = _list[indexPath.row].formattedString
 		return cell
 	}
 	

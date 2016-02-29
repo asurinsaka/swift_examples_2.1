@@ -21,4 +21,7 @@ bug unfixed in photoviewcontroller.swift. line 127-143
 
 <img src="LocateMe.png" width="200">
 
+## SimpleTableView
+<img src="SimpleTableView1.png" width="200">
+<img src="SimpleTableView2.png" width="200">
 

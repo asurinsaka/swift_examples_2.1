@@ -13,13 +13,16 @@ struct TimeZoneInfo
 	let zone:NSTimeZone
 	
 	let name:String
-	let formattedString:String?
+    var formattedString:String? {
+        get {
+            return format(self.zone)
+        }
+    }
 	
 	init(name:String)
 	{
 		self.name = name
 		self.zone = NSTimeZone(name: name)!
-		self.formattedString = format(self.zone)
 	}
 	
 	private func format(data:NSTimeZone)->String
@@ -80,7 +83,7 @@ class TimeZoneModel
 		for i in 0..<names.count
 		{
 			let zone = TimeZoneInfo(name: names[i])
-			let key = zone.name.substringToIndex(advance(zone.name.startIndex, 1))
+            let key = zone.name.substringToIndex(zone.name.startIndex.advancedBy(1))
 			if _dict[key] == nil
 			{
 				_dict[key] = [TimeZoneInfo]()
@@ -93,14 +96,14 @@ class TimeZoneModel
 		
 		for (key, _) in _dict
 		{
-			_dict[key]?.sort()
+			_dict[key]?.sortInPlace()
 			{
 				$0.name.localizedStandardCompare($1.name) == NSComparisonResult.OrderedAscending
 			}
 		}
 		
-		_keys.sort(){$0.localizedStandardCompare($1) == NSComparisonResult.OrderedAscending}
-		_list.sort()
+		_keys.sortInPlace(){$0.localizedStandardCompare($1) == NSComparisonResult.OrderedAscending}
+		_list.sortInPlace()
 		{
 			if $0.zone.secondsFromGMT != $1.zone.secondsFromGMT
 			{
