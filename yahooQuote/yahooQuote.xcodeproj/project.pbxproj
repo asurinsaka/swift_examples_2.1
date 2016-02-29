@@ -88,6 +88,8 @@
 		6B1CF4AE1ADFA76F00D40C98 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0720;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = larryhou;
 				TargetAttributes = {
@@ -240,6 +242,7 @@
 				6B1CF4BF1ADFA76F00D40C98 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

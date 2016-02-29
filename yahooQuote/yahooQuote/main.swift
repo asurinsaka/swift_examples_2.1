@@ -19,7 +19,7 @@ enum CooprActionType:String
 	case DIVIDEND = "DIVIDEND"
 }
 
-struct CoorpAction:Printable
+struct CoorpAction:CustomStringConvertible
 {
 	let date:NSDate
 	let type:CooprActionType
@@ -34,7 +34,7 @@ struct CoorpAction:Printable
 
 func getQuoteRequest(ticket:String)->NSURLRequest
 {
-	var formatter = NSDateFormatter()
+	let formatter = NSDateFormatter()
 	formatter.dateFormat = "MM-dd-yyyy"
 	
 	var date = formatter.stringFromDate(NSDate()).componentsSeparatedByString("-")
@@ -45,7 +45,7 @@ func getQuoteRequest(ticket:String)->NSURLRequest
 
 func getCoorpActionRequest(ticket:String)->NSURLRequest
 {
-	var formatter = NSDateFormatter()
+	let formatter = NSDateFormatter()
 	formatter.dateFormat = "MM-dd-yyyy"
 	
 	var date = formatter.stringFromDate(NSDate()).componentsSeparatedByString("-")
@@ -59,16 +59,22 @@ func fetchCooprActions(request:NSURLRequest)
 {
 	if verbose
 	{
-		println(request.URL!)
+		print(request.URL!)
 	}
 	
 	var coorpActions:[CoorpAction]!
 	
-	var formatter = NSDateFormatter()
+	let formatter = NSDateFormatter()
 	formatter.dateFormat = "yyyyMMdd"
 	
 	var response:NSURLResponse?, error:NSError?
-	let data = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error: &error)
+	let data: NSData?
+	do {
+		data = try NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
+	} catch let error1 as NSError {
+		error = error1
+		data = nil
+	}
 	if error == nil && (response as! NSHTTPURLResponse).statusCode == 200
 	{
 		coorpActions = []
@@ -112,13 +118,13 @@ func fetchCooprActions(request:NSURLRequest)
 		coorpActions = nil
 		if verbose
 		{
-			println(response == nil ? error! : response!)
+			print(response == nil ? error! : response!)
 		}
 	}
 	
 	if coorpActions != nil
 	{
-		coorpActions.sort({$0.date.timeIntervalSince1970 < $1.date.timeIntervalSince1970})
+		coorpActions.sortInPlace({$0.date.timeIntervalSince1970 < $1.date.timeIntervalSince1970})
 		
 		var values:[Double] = []
 		for i in 0..<coorpActions.count
@@ -139,8 +145,8 @@ func fetchCooprActions(request:NSURLRequest)
 		
 		if verbose
 		{
-			println(dividends)
-			println(splits)
+			print(dividends)
+			print(splits)
 		}
 		
 		if splits != nil
@@ -164,7 +170,7 @@ func fetchCooprActions(request:NSURLRequest)
 	}
 }
 
-func createActionMap(list:[CoorpAction]?, #formatter:NSDateFormatter)->[String:CoorpAction]
+func createActionMap(list:[CoorpAction]?, formatter:NSDateFormatter)->[String:CoorpAction]
 {
 	var map:[String:CoorpAction] = [:]
 	if list == nil
@@ -189,13 +195,13 @@ func formatQuote(text:String)->String
 
 func parseQuote(data:[String])
 {
-	var formatter = NSDateFormatter()
+	let formatter = NSDateFormatter()
 	formatter.dateFormat = "yyyy-MM-dd"
 	
 	var dmap = createActionMap(dividends, formatter: formatter)
 	var splitAction:CoorpAction!
 	
-	println("date,open,high,low,close,volume,split,dividend,adjclose")
+	print("date,open,high,low,close,volume,split,dividend,adjclose")
 	
 	for i in 0..<data.count
 	{
@@ -250,7 +256,7 @@ func parseQuote(data:[String])
 		
 		msg += "," + String(format:"%.6f", dividend)
 		msg += ",\(adjclose)"
-		println(msg)
+		print(msg)
 	}
 }
 
@@ -258,24 +264,30 @@ func fetchQuote(request:NSURLRequest)
 {
 	if verbose
 	{
-		println(request.URL!)
+		print(request.URL!)
 	}
 	
 	var response:NSURLResponse?, error:NSError?
-	let data = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error: &error)
+	let data: NSData?
+	do {
+		data = try NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
+	} catch let error1 as NSError {
+		error = error1
+		data = nil
+	}
 	if error == nil && (response as! NSHTTPURLResponse).statusCode == 200
 	{
 		let text = NSString(data: data!, encoding: NSUTF8StringEncoding)!
-		var list = text.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet()) as! [String]
+		var list = text.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet()) 
 		
 		list.removeAtIndex(0)
-		parseQuote(list.reverse())
+		parseQuote(Array(list.reverse()))
 	}
 	else
 	{
 		if verbose
 		{
-			println(response == nil ? error! : response!)
+			print(response == nil ? error! : response!)
 		}
 	}
 }
@@ -284,7 +296,7 @@ func judge(@autoclosure condition:()->Bool, message:String)
 {
 	if !condition()
 	{
-		println("ERR: " + message)
+		print("ERR: " + message)
 		exit(1)
 	}
 }
@@ -292,9 +304,9 @@ func judge(@autoclosure condition:()->Bool, message:String)
 if Process.arguments.filter({$0 == "-h"}).count == 0
 {
 	let count = Process.arguments.filter({$0 == "-t"}).count
-	judge(count >= 1, "[-t STOCK_TICKET] MUST be provided")
-	judge(count == 1, "[-t STOCK_TICKET] has been set \(count) times")
-	judge(Process.argc >= 3, "Unenough Parameters")
+	judge(count >= 1, message: "[-t STOCK_TICKET] MUST be provided")
+	judge(count == 1, message: "[-t STOCK_TICKET] has been set \(count) times")
+	judge(Process.argc >= 3, message: "Unenough Parameters")
 }
 
 var ticket:String = "0700"
@@ -312,7 +324,7 @@ for i in 1..<Int(Process.argc)
 	switch option
 	{
 		case "-t":
-			judge(Process.arguments.count > i + 1, "-t lack of parameter")
+			judge(Process.arguments.count > i + 1, message: "-t lack of parameter")
 			ticket = Process.arguments[i + 1]
 			skip = true
 			break
@@ -323,12 +335,12 @@ for i in 1..<Int(Process.argc)
 		
 		case "-h":
 			let msg = Process.arguments[0] + " -t STOCK_TICKET"
-			println(msg)
+			print(msg)
 			exit(0)
 			break
 			
 		default:
-			println("Unsupported arguments: " + Process.arguments[i])
+			print("Unsupported arguments: " + Process.arguments[i])
 			exit(2)
 	}
 }

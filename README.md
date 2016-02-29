@@ -16,3 +16,9 @@ This one original from https://github.com/larryhou/swift is so far the best one 
 bug unfixed in photoviewcontroller.swift. line 127-143
 
 ## ByteArray
+
+## LocateMe
+
+<img src="LocateMe.png" width="200">
+
+

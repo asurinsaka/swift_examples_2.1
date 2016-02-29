@@ -64,7 +64,7 @@ class TrackViewController:UITableViewController, SetupSettingReceiver, CLLocatio
     
     override func viewWillAppear(animated: Bool)
     {
-        println(setting)
+        print(setting)
 		startTrackLocation()
     }
 	
@@ -74,7 +74,7 @@ class TrackViewController:UITableViewController, SetupSettingReceiver, CLLocatio
 	}
 	
 	//MARK: 定位相关
-	func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!)
+	func locationManager(manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation)
 	{
 		measurements.insert(newLocation, atIndex: 0)
 		location = newLocation
@@ -82,7 +82,7 @@ class TrackViewController:UITableViewController, SetupSettingReceiver, CLLocatio
 		if location.horizontalAccuracy <= setting.accuracy
 		{
 			status = .Acquired
-			navigationItem.rightBarButtonItem.enabled = true
+			navigationItem.rightBarButtonItem!.enabled = true
 			
 			stopTrackLocation()
 		}
@@ -90,10 +90,10 @@ class TrackViewController:UITableViewController, SetupSettingReceiver, CLLocatio
 		tableView.reloadData()
 	}
 	
-	func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!)
+	func locationManager(manager: CLLocationManager, didFailWithError error: NSError)
 	{
 		status = .Error
-		navigationItem.rightBarButtonItem.enabled = true
+		navigationItem.rightBarButtonItem!.enabled = true
 		
 		tableView.reloadData()
 	}
@@ -101,7 +101,7 @@ class TrackViewController:UITableViewController, SetupSettingReceiver, CLLocatio
 	func startTrackLocation()
 	{
 		status = .Tracking
-		navigationItem.rightBarButtonItem.enabled = false
+		navigationItem.rightBarButtonItem!.enabled = false
 		
 		tableView.reloadData()
 		
@@ -124,23 +124,23 @@ class TrackViewController:UITableViewController, SetupSettingReceiver, CLLocatio
 	}
 	
 	//MARK: 列表相关
-	override func numberOfSectionsInTableView(tableView: UITableView!) -> Int
+	override func numberOfSectionsInTableView(tableView: UITableView) -> Int
 	{
 		return 3
 	}
 	
-	override func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat
+	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
 	{
-		switch SectionType.fromRaw(indexPath.section)!
+		switch SectionType(rawValue: indexPath.section)!
 		{
 			case .TrackStatus:return 44.0
 			default:return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
 		}
 	}
 	
-	override func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
+	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
 	{
-		switch SectionType.fromRaw(section)!
+		switch SectionType(rawValue: section)!
 		{
 			case .TrackStatus:return 1
 			case .Property:return 4
@@ -148,77 +148,76 @@ class TrackViewController:UITableViewController, SetupSettingReceiver, CLLocatio
 		}
 	}
 	
-	override func tableView(tableView: UITableView!, titleForHeaderInSection section: Int) -> String!
+	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
 	{
-		switch SectionType.fromRaw(section)!
+		switch SectionType(rawValue: section)!
 		{
 			case .TrackStatus:return localizeString("Status")
 			case .Property:return localizeString("RTStats")
 			case .Measurements:return localizeString("All Measurements")
 		}
 	}
-	
-	override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
-	{
-		switch SectionType.fromRaw(indexPath.section)!
-		{
-			case .TrackStatus:
-				var cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Status.toRaw()) as TrackStatusTableViewCell
-				cell.label.text = localizeString(status.toRaw())
-				if status == .Tracking
-				{
-					if !cell.indicator.isAnimating()
-					{
-						cell.indicator.startAnimating()
-					}
-				}
-				else
-				{
-					if cell.indicator.isAnimating()
-					{
-						cell.indicator.stopAnimating()
-					}
-				}
-				return cell
-			
-			case .Property:
-				var cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Property.toRaw()) as UITableViewCell
-				switch indexPath.row
-				{
-					case 0:
-						cell.textLabel.text = localizeString("accuracy")
-						cell.detailTextLabel.text = location != nil ? location.getHorizontalAccuracyString() : "-"
-					case 1:
-						cell.textLabel.text = localizeString("course")
-						cell.detailTextLabel.text = location != nil ? location.getCourseString() : "-"
-					case 2:
-						cell.textLabel.text = localizeString("speed")
-						cell.detailTextLabel.text = location != nil ? location.getSpeedString() : "-"
-					case 3: fallthrough default:
-						cell.textLabel.text = localizeString("time")
-						cell.detailTextLabel.text = location != nil ? dateFormatter.stringFromDate(location.timestamp) : "-"
-				}
-				
-				return cell
-			
-			case .Measurements:
-				var location:CLLocation = measurements[indexPath.row]
-				var cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Measurement.toRaw()) as UITableViewCell
-				cell.textLabel.text = location.getCoordinateString()
-				cell.detailTextLabel.text = dateFormatter.stringFromDate(location.timestamp)
-				return cell
-		}
-	}
-	
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        switch SectionType(rawValue: indexPath.section)!
+        {
+        case .TrackStatus:
+            let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Status.rawValue) as! TrackStatusTableViewCell
+            cell.label.text = localizeString(status.rawValue)
+            if status == .Tracking
+            {
+                if !cell.indicator.isAnimating()
+                {
+                    cell.indicator.startAnimating()
+                }
+            }
+            else
+            {
+                if cell.indicator.isAnimating()
+                {
+                    cell.indicator.stopAnimating()
+                }
+            }
+            return cell
+            
+        case .Property:
+            let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Property.rawValue)! as UITableViewCell
+            switch indexPath.row
+            {
+            case 0:
+                cell.textLabel!.text = localizeString("accuracy")
+                cell.detailTextLabel!.text = location != nil ? location.getHorizontalAccuracyString() : "-"
+            case 1:
+                cell.textLabel!.text = localizeString("course")
+                cell.detailTextLabel!.text = location != nil ? location.getCourseString() : "-"
+            case 2:
+                cell.textLabel!.text = localizeString("speed")
+                cell.detailTextLabel!.text = location != nil ? location.getSpeedString() : "-"
+            case 3: fallthrough default:
+                cell.textLabel!.text = localizeString("time")
+                cell.detailTextLabel!.text = location != nil ? dateFormatter.stringFromDate(location.timestamp) : "-"
+            }
+            
+            return cell
+            
+        case .Measurements:
+            let location:CLLocation = measurements[indexPath.row]
+            let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Measurement.rawValue)! as UITableViewCell
+            cell.textLabel!.text = location.getCoordinateString()
+            cell.detailTextLabel!.text = dateFormatter.stringFromDate(location.timestamp)
+            return cell
+        }
+    }
+		
 	//MARK: 数据透传
-	override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!)
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!)
 	{
 		if segue.identifier == "LocationDetailSegue"
 		{
-			var indexPath = tableView.indexPathForCell(sender as UITableViewCell)
+			let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)
 			
-			var destinationCtrl = segue.destinationViewController as LocationDetailViewController
-			destinationCtrl.location = measurements[indexPath.row]
+			let destinationCtrl = segue.destinationViewController as! LocationDetailViewController
+			destinationCtrl.location = measurements[indexPath!.row]
 		}
 	}
 }

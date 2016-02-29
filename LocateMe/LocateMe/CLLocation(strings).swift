@@ -18,20 +18,20 @@ extension CLLocation
 			return localizeString("DataUnavailable")
 		}
 
-		var latSuffix = self.coordinate.latitude < 0 ? localizeString("South") : localizeString("North")
-		var lonSuffix = self.coordinate.longitude < 0 ? localizeString("West") : localizeString("East")
+		let latSuffix = self.coordinate.latitude < 0 ? localizeString("South") : localizeString("North")
+		let lonSuffix = self.coordinate.longitude < 0 ? localizeString("West") : localizeString("East")
 		return String(format: localizeString("LatLongFormat"), fabs(self.coordinate.latitude), latSuffix, fabs(self.coordinate.longitude), lonSuffix)
 	}
 	
 	func getLatitudeString()->String
 	{
-		var suffix = self.coordinate.latitude < 0 ? localizeString("South") : localizeString("North")
+		let suffix = self.coordinate.latitude < 0 ? localizeString("South") : localizeString("North")
 		return String(format:localizeString("LocationFormat"), fabs(self.coordinate.latitude), suffix);
 	}
 	
 	func getLongitudeString()->String
 	{
-		var suffix = self.coordinate.longitude < 0 ? localizeString("West") : localizeString("East")
+		let suffix = self.coordinate.longitude < 0 ? localizeString("West") : localizeString("East")
 		return String(format:localizeString("LocationFormat"), fabs(self.coordinate.longitude), suffix);
 	}
 	
@@ -42,7 +42,7 @@ extension CLLocation
 			return localizeString("DataUnavailable")
 		}
 		
-		var suffix:String = self.altitude < 0 ? localizeString("BelowSeaLevel") : localizeString("AboveSeaLevel")
+		let suffix:String = self.altitude < 0 ? localizeString("BelowSeaLevel") : localizeString("AboveSeaLevel")
 		
 		return String(format: localizeString("AltitudeFormat"), suffix, fabs(self.altitude))
 	}

@@ -120,7 +120,7 @@ class LocateViewController:UITableViewController, SetupSettingReceiver, CLLocati
         status = .Updating
         tableView.reloadData()
         
-        println(setting)
+        print(setting)
         
         remainTime = setting.sliderValue
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0,
@@ -171,16 +171,16 @@ class LocateViewController:UITableViewController, SetupSettingReceiver, CLLocati
 		}
     }
     
-    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus)
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus)
     {
-        println("authorization:\(status.description)")
+        print("authorization:\(status.description)")
     }
     
-	func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!)
+	func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
 	{
         for data in locations
         {
-            var location = data as CLLocation
+            let location = data as CLLocation
             
             measurements.append(location)
             
@@ -197,30 +197,30 @@ class LocateViewController:UITableViewController, SetupSettingReceiver, CLLocati
         tableView.reloadData()
 	}
 	
-	func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!)
+	func locationManager(manager: CLLocationManager, didFailWithError error: NSError)
 	{
 		stopUpdatingLocation(.Error)
 	}
 	
 	// MARK: 列表展示
 	
-	override func numberOfSectionsInTableView(tableView: UITableView!) -> Int
+	override func numberOfSectionsInTableView(tableView: UITableView) -> Int
 	{
 		return bestMeasurement != nil ? 3 : 1
 	}
 
-	override func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat
+	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
 	{
-		switch SectionType.fromRaw(indexPath.section)!
+		switch SectionType(rawValue: indexPath.section)!
 		{
 			case .LocateStatus:return 60.0 //FIXME: 自定义UITableViewCell需要手动指定高度
 			default:return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
 		}
 	}
 	
-	override func tableView(tableView: UITableView!, titleForHeaderInSection section: Int) -> String!
+	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
 	{
-		if let type = SectionType.fromRaw(section)
+		if let type = SectionType(rawValue: section)
 		{
 			switch type
 			{
@@ -241,9 +241,9 @@ class LocateViewController:UITableViewController, SetupSettingReceiver, CLLocati
 		
 	}
 	
-	override func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
+	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
 	{
-		if let type = SectionType.fromRaw(section)
+		if let type = SectionType(rawValue: section)
 		{
 			switch type
 			{
@@ -257,76 +257,81 @@ class LocateViewController:UITableViewController, SetupSettingReceiver, CLLocati
 			return 0
 		}
 	}
-	
-	override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
-	{
-		if let type = SectionType.fromRaw(indexPath.section)
-		{
-			switch type
-			{
-				case .LocateStatus:
-					var cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Status.toRaw()) as StatusTableViewCell
-					cell.timeTicker.text = leftFormatter.stringFromNumber(remainTime)
-					cell.label.text = localizeString(status.toRaw())
-					if status == .Updating
-					{
-						cell.timeTicker.alpha = 1.0
-						if !cell.indicator.isAnimating()
-						{
-							cell.indicator.startAnimating()
-						}
-					}
-					else
-					{
-						cell.timeTicker.alpha = 0.0
-						if cell.indicator.isAnimating()
-						{
-							cell.indicator.stopAnimating()
-						}
-					}
-					return cell
-				
-				case .BestMeasurement:
-					var cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Measurement.toRaw()) as UITableViewCell
-					cell.textLabel.text = bestMeasurement.getCoordinateString()
-					cell.detailTextLabel.text = dateFormatter.stringFromDate(bestMeasurement.timestamp)
-					return cell
-				
-				case .Measurements:
-					var location = measurements[indexPath.row]
-					var cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Measurement.toRaw()) as UITableViewCell
-					cell.textLabel.text = location.getCoordinateString()
-					cell.detailTextLabel.text = dateFormatter.stringFromDate(location.timestamp)
-					return cell
-			}
-		}
-		else
-		{
-			return nil
-		}
-	}
     
-    override func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!)
-    {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if let type = SectionType(rawValue: indexPath.section)
+        {
+            switch type
+            {
+            case .LocateStatus:
+                let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Status.rawValue) as! StatusTableViewCell
+                cell.timeTicker.text = leftFormatter.stringFromNumber(remainTime)
+                cell.label.text = localizeString(status.rawValue)
+                if status == .Updating
+                {
+                    cell.timeTicker.alpha = 1.0
+                    if !cell.indicator.isAnimating()
+                    {
+                        cell.indicator.startAnimating()
+                    }
+                }
+                else
+                {
+                    cell.timeTicker.alpha = 0.0
+                    if cell.indicator.isAnimating()
+                    {
+                        cell.indicator.stopAnimating()
+                    }
+                }
+                return cell
+                
+            case .BestMeasurement:
+                let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Measurement.rawValue)! as UITableViewCell
+                cell.textLabel!.text = bestMeasurement.getCoordinateString()
+                cell.detailTextLabel!.text = dateFormatter.stringFromDate(bestMeasurement.timestamp)
+                return cell
+                
+            case .Measurements:
+                let location = measurements[indexPath.row]
+                let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Measurement.rawValue)! as UITableViewCell
+                
+                cell.textLabel!.text = location.getCoordinateString()
+                cell.detailTextLabel!.text = dateFormatter.stringFromDate(location.timestamp)
+                return cell
+            }
+        }
+        else{
+            return UITableViewCell()
+        }
     }
+    
+    
+    
+    
+    
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+
+    }
+    
 	
 	//MARK: segue
-	override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!)
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!)
 	{
 		if segue.identifier == "LocationDetailSegue"
 		{
-			var indexPath = tableView.indexPathForCell(sender as UITableViewCell)
-			var type:SectionType = SectionType.fromRaw(indexPath.section)!
+			let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)
+			let type:SectionType = SectionType(rawValue: indexPath!.section)!
 			
-			var destinationCtrl = segue.destinationViewController as LocationDetailViewController
+			let destinationCtrl = segue.destinationViewController as! LocationDetailViewController
 			
 			switch type
 			{
 				case .BestMeasurement:
 					destinationCtrl.location = bestMeasurement
 				case .Measurements:
-					destinationCtrl.location = measurements[indexPath.row]
+					destinationCtrl.location = measurements[indexPath!.row]
 				default:break
 			}
 		}

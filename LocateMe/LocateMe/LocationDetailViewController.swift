@@ -25,14 +25,14 @@ class LocationDetailViewController:UITableViewController
 	var location:CLLocation!
 	
 	//MARK: 列表逻辑
-	override func numberOfSectionsInTableView(tableView: UITableView!) -> Int
+	override func numberOfSectionsInTableView(tableView: UITableView) -> Int
 	{
 		return 4
 	}
 	
-    override func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-		var type:SectionType = SectionType.fromRaw(section)!
+		let type:SectionType = SectionType(rawValue: section)!
 		switch type
 		{
 			case .Accuracy:return 2
@@ -42,17 +42,19 @@ class LocationDetailViewController:UITableViewController
 		}
     }
     
-    override func tableView(tableView: UITableView!, titleForHeaderInSection section: Int) -> String!
-    {
-		var type:SectionType = SectionType.fromRaw(section)!
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let type:SectionType = SectionType(rawValue: section)!
         switch type
         {
-			case .Accuracy:return localizeString("Accuracy")
-			case .Altitude:return localizeString("Altitude")
-			case .Movement:return localizeString("Movement")
-			case .Coordinate:return localizeString("Coordinate")
+        case .Accuracy:return localizeString("Accuracy")
+        case .Altitude:return localizeString("Altitude")
+        case .Movement:return localizeString("Movement")
+        case .Coordinate:return localizeString("Coordinate")
         }
+
     }
+    
+
 	
 	func padding(latlong:Double)->String
 	{
@@ -74,56 +76,57 @@ class LocationDetailViewController:UITableViewController
 		
 		return prefix
 	}
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(DETAIL_CELL_IDENTIFIER)! as UITableViewCell
+        
+        let type:SectionType = SectionType(rawValue: indexPath.section)!
+        switch type
+        {
+        case .Coordinate:
+            if indexPath.row == 0
+            {
+                cell.textLabel!.text = localizeString("latitude")
+                location.coordinate.latitude
+                cell.detailTextLabel!.text = padding(location.coordinate.latitude) + location.getLatitudeString()
+                
+            }
+            else
+            {
+                cell.textLabel!.text = localizeString("longitude")
+                cell.detailTextLabel!.text = padding(location.coordinate.longitude) + location.getLongitudeString()
+            }
+            
+        case .Accuracy:
+            if indexPath.row == 0
+            {
+                cell.textLabel!.text = localizeString("horizontal")
+                cell.detailTextLabel!.text = location.getHorizontalAccuracyString()
+            }
+            else
+            {
+                cell.textLabel!.text = localizeString("vertical")
+                cell.detailTextLabel!.text = location.getVerticalAccuracyString()
+            }
+        case .Altitude:
+            cell.textLabel!.text = localizeString("altitude")
+            cell.detailTextLabel!.text = location.getAltitudeString()
+            
+        case .Movement:
+            if indexPath.row == 0
+            {
+                cell.textLabel!.text = localizeString("course")
+                cell.detailTextLabel!.text = location.getCourseString()
+            }
+            else
+            {
+                cell.textLabel!.text = localizeString("speed")
+                cell.detailTextLabel!.text = location.getSpeedString()
+            }
+        }
+        
+        return cell
+    }
 	
-	override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
-	{
-		var cell = tableView.dequeueReusableCellWithIdentifier(DETAIL_CELL_IDENTIFIER) as UITableViewCell
-		
-		var type:SectionType = SectionType.fromRaw(indexPath.section)!
-		switch type
-		{
-			case .Coordinate:
-				if indexPath.row == 0
-				{
-					cell.textLabel.text = localizeString("latitude")
-					location.coordinate.latitude
-					cell.detailTextLabel.text = padding(location.coordinate.latitude) + location.getLatitudeString()
-					
-				}
-				else
-				{
-					cell.textLabel.text = localizeString("longitude")
-					cell.detailTextLabel.text = padding(location.coordinate.longitude) + location.getLongitudeString()
-				}
-			
-			case .Accuracy:
-				if indexPath.row == 0
-				{
-					cell.textLabel.text = localizeString("horizontal")
-					cell.detailTextLabel.text = location.getHorizontalAccuracyString()
-				}
-				else
-				{
-					cell.textLabel.text = localizeString("vertical")
-					cell.detailTextLabel.text = location.getVerticalAccuracyString()
-				}
-			case .Altitude:
-				cell.textLabel.text = localizeString("altitude")
-				cell.detailTextLabel.text = location.getAltitudeString()
-			
-			case .Movement:
-				if indexPath.row == 0
-				{
-					cell.textLabel.text = localizeString("course")
-					cell.detailTextLabel.text = location.getCourseString()
-				}
-				else
-				{
-					cell.textLabel.text = localizeString("speed")
-					cell.detailTextLabel.text = location.getSpeedString()
-				}
-		}
-		
-		return cell
-	}
+	
 }

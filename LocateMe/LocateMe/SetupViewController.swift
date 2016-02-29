@@ -85,13 +85,13 @@ class SetupViewController:UIViewController, UIPickerViewDelegate, UIPickerViewDa
         sliderChangedValue(slider)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!)
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!)
     {
         if segue.identifier == "SettingSegue"
         {
             if segue.destinationViewController is SetupSettingReceiver
             {
-                var reciever:SetupSettingReceiver = segue.destinationViewController as SetupSettingReceiver
+                let reciever:SetupSettingReceiver = segue.destinationViewController as! SetupSettingReceiver
                 reciever.setupSetting(setting)
             }
         }
@@ -110,22 +110,22 @@ class SetupViewController:UIViewController, UIPickerViewDelegate, UIPickerViewDa
         label.text = formater.stringFromNumber(sender.value)
     }
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView!) -> Int
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
     {
         return 1
     }
     
-    func pickerView(pickerView: UIPickerView!, numberOfRowsInComponent component: Int) -> Int
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
     {
         return options.count
     }
     
-    func pickerView(pickerView: UIPickerView!, titleForRow row: Int, forComponent component: Int) -> String!
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
     {
         return options[row].label
     }
     
-    func pickerView(pickerView: UIPickerView!, didSelectRow row: Int, inComponent component: Int)
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
         selectedPickerIndex = row
     }
