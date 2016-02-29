@@ -13,7 +13,7 @@ class ByteArrayTests: XCTestCase
 {
     func testReadBoolean()
     {
-        var bytes = ByteArray()
+        let bytes = ByteArray()
         
         var value = UInt8(arc4random_uniform(2))
         bytes.data.appendBytes(&value, length: 1)
@@ -24,11 +24,11 @@ class ByteArrayTests: XCTestCase
     
     func testReadInt8()
     {
-        var bytes = ByteArray()
+        let bytes = ByteArray()
         for i in 0...0xFF
         {
             var byte = UInt8(arc4random_uniform(0xFF))
-            var data = NSData(bytes: &byte, length: 1)
+            let data = NSData(bytes: &byte, length: 1)
             
             var value:Int8 = 0
             data.getBytes(&value, length: 1)
@@ -42,13 +42,13 @@ class ByteArrayTests: XCTestCase
     {
         let endian = ByteArray.Endian.LITTLE_ENDIAN
         
-        var bytes = ByteArray()
+        let bytes = ByteArray()
         bytes.endian = endian
         
         for n in 0...5000
         {
-            var value = Int(arc4random())
-            var position = Int(arc4random_uniform(UInt32(bytes.length)))
+            let value = Int(arc4random())
+            let position = Int(arc4random_uniform(UInt32(bytes.length)))
             
             bytes.position = position
             bytes.writeInt64(value)
@@ -72,7 +72,7 @@ class ByteArrayTests: XCTestCase
         let endian = ByteArray.Endian.BIG_ENDIAN
         
         var list:[Int] = []
-        var data = NSMutableData()
+        let data = NSMutableData()
         for n in 0...10000
         {
             var value = Int(arc4random())
@@ -88,12 +88,12 @@ class ByteArrayTests: XCTestCase
         
         XCTAssertEqual(data.length % 8, 0)
         
-        var bytes = ByteArray(data: data)
+        let bytes = ByteArray(data: data)
         bytes.endian = endian
         
         for n in 0...5000
         {
-            var index = Int(arc4random_uniform(UInt32(list.count)))
+            let index = Int(arc4random_uniform(UInt32(list.count)))
             
             bytes.position = index * 8
             XCTAssertEqual(list[index], bytes.readInt64())
@@ -102,8 +102,8 @@ class ByteArrayTests: XCTestCase
     
     func testWriteInt8()
     {
-        var value:Int8 = -25
-        var bytes = ByteArray()
+        let value:Int8 = -25
+        let bytes = ByteArray()
         bytes.writeInt8(value)
         
         bytes.position = 0
@@ -112,8 +112,8 @@ class ByteArrayTests: XCTestCase
     
     func testWriteInt16()
     {
-        var value:Int16 = -2500
-        var bytes = ByteArray()
+        let value:Int16 = -2500
+        let bytes = ByteArray()
         bytes.endian = .BIG_ENDIAN
         bytes.writeInt16(value)
         
@@ -125,13 +125,13 @@ class ByteArrayTests: XCTestCase
     {
         let endian = ByteArray.Endian.LITTLE_ENDIAN
         
-        var bytes = ByteArray()
+        let bytes = ByteArray()
         bytes.endian = endian
         
         for n in 0...5000
         {
-            var value = Double(arc4random()) / Double(UInt32.max)
-            var position = Int(arc4random_uniform(UInt32(bytes.length)))
+            let value = Double(arc4random()) / Double(UInt32.max)
+            let position = Int(arc4random_uniform(UInt32(bytes.length)))
             
             bytes.position = position
             bytes.writeDouble(value)
@@ -142,7 +142,7 @@ class ByteArrayTests: XCTestCase
                 var mem = [UInt8](count: 8, repeatedValue: 0)
                 
                 bytes.data.getBytes(&mem, range: NSRange(location: position, length: mem.count))
-                num = UnsafePointer<Double>(mem.reverse()).memory
+                num = UnsafePointer<Double>(Array(mem.reverse())).memory
             }
             else
             {
@@ -158,7 +158,7 @@ class ByteArrayTests: XCTestCase
         let endian = ByteArray.Endian.BIG_ENDIAN
         
         var list:[Double] = []
-        var data = NSMutableData()
+        let data = NSMutableData()
         for n in 0...10000
         {
             var value = Double(arc4random()) / Double(UInt32.max)
@@ -166,7 +166,7 @@ class ByteArrayTests: XCTestCase
             list.append(value)
             if endian == .BIG_ENDIAN
             {
-                var mem = ByteArray.dump(value).reverse()
+                let mem = Array(ByteArray.dump(value).reverse())
                 value = UnsafePointer<Double>(mem).memory
             }
             
@@ -175,12 +175,12 @@ class ByteArrayTests: XCTestCase
         
         XCTAssertEqual(data.length % 8, 0)
         
-        var bytes = ByteArray(data: data)
+        let bytes = ByteArray(data: data)
         bytes.endian = endian
         
         for n in 0...5000
         {
-            var index = Int(arc4random_uniform(UInt32(list.count)))
+            let index = Int(arc4random_uniform(UInt32(list.count)))
             
             bytes.position = index * 8
             XCTAssertEqual(list[index], bytes.readDouble())
@@ -189,7 +189,7 @@ class ByteArrayTests: XCTestCase
     
     func testEndian()
     {
-        var bytes = ByteArray()
+        let bytes = ByteArray()
         bytes.endian = .LITTLE_ENDIAN
         
         bytes.writeDouble(M_PI)
@@ -204,7 +204,7 @@ class ByteArrayTests: XCTestCase
         bytes.endian = .BIG_ENDIAN
         bytes.writeDouble(M_PI)
         
-        list = list.reverse()
+        list = Array(list.reverse())
         for i in 0..<bytes.length
         {
             XCTAssertEqual(list[i], bytes[i])
@@ -213,12 +213,12 @@ class ByteArrayTests: XCTestCase
     
     func testWriteUTFBytes()
     {
-        var text = "侯坤峰侯坤峰侯坤峰侯坤峰"
+        let text = "侯坤峰侯坤峰侯坤峰侯坤峰"
         
-        var bytes = ByteArray()
+        let bytes = ByteArray()
         bytes.writeUTFBytes(text)
         
-        var data = NSString(string: text).dataUsingEncoding(NSUTF8StringEncoding)!
+        let data = NSString(string: text).dataUsingEncoding(NSUTF8StringEncoding)!
         
         XCTAssertEqual(data.length, bytes.length)
         
@@ -233,10 +233,10 @@ class ByteArrayTests: XCTestCase
     
     func testReadUTFBytes()
     {
-        var text = "侯坤峰侯坤峰侯坤峰侯坤峰"
+        let text = "侯坤峰侯坤峰侯坤峰侯坤峰"
         
-        var bytes = ByteArray()
-        var data = NSString(string: text).dataUsingEncoding(NSUTF8StringEncoding)!
+        let bytes = ByteArray()
+        let data = NSString(string: text).dataUsingEncoding(NSUTF8StringEncoding)!
         bytes.data.appendData(data)
         
         bytes.position = 0
@@ -245,13 +245,13 @@ class ByteArrayTests: XCTestCase
     
     func testReadMultiBytes()
     {
-        var text = "侯坤峰侯坤峰侯坤峰侯坤峰"
+        let text = "侯坤峰侯坤峰侯坤峰侯坤峰"
         
-        var bytes = ByteArray()
-        var encoding = CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue)
-        var charset = CFStringConvertEncodingToNSStringEncoding(encoding)
+        let bytes = ByteArray()
+        let encoding = CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue)
+        let charset = CFStringConvertEncodingToNSStringEncoding(encoding)
         
-        var data = NSString(string: text).dataUsingEncoding(charset)!
+        let data = NSString(string: text).dataUsingEncoding(charset)!
         bytes.data.appendData(data)
         
         bytes.position = 0
@@ -260,10 +260,10 @@ class ByteArrayTests: XCTestCase
     
     func testWriteMultiBytes()
     {
-        var text = "侯坤峰侯坤峰侯坤峰侯坤峰"
-        var bytes = ByteArray()
+        let text = "侯坤峰侯坤峰侯坤峰侯坤峰"
+        let bytes = ByteArray()
         
-        var encoding = CFStringEncoding(CFStringEncodings.EUC_TW.rawValue)
+        let encoding = CFStringEncoding(CFStringEncodings.EUC_TW.rawValue)
         bytes.writeMultiBytes(text, encoding: encoding)
         
         bytes.position = 0
@@ -272,10 +272,10 @@ class ByteArrayTests: XCTestCase
     
     func testReadBytes()
     {
-        var data = NSString(string: "侯坤峰侯坤峰侯坤峰侯坤峰").dataUsingEncoding(NSUTF8StringEncoding)!
-        var bytes = ByteArray(data: data)
+        let data = NSString(string: "侯坤峰侯坤峰侯坤峰侯坤峰").dataUsingEncoding(NSUTF8StringEncoding)!
+        let bytes = ByteArray(data: data)
         
-        var refer = ByteArray()
+        let refer = ByteArray()
         
         var value = M_PI
         for n in 0...5000
@@ -286,10 +286,10 @@ class ByteArrayTests: XCTestCase
                 refer.data.appendBytes(&value, length: sizeof(Double))
             }
             
-            var bytesOffset = Int(arc4random_uniform(UInt32(bytes.length - 2)) + 1)
-            var referOffset = Int(arc4random_uniform(UInt32(refer.length * 2)) + 1)
+            let bytesOffset = Int(arc4random_uniform(UInt32(bytes.length - 2)) + 1)
+            let referOffset = Int(arc4random_uniform(UInt32(refer.length * 2)) + 1)
             
-            var num = Int(arc4random_uniform(UInt32(data.length - bytesOffset)) + 1)
+            let num = Int(arc4random_uniform(UInt32(data.length - bytesOffset)) + 1)
             
             bytes.position = bytesOffset
             bytes.readBytes(refer, offset: referOffset, length: num)
@@ -303,10 +303,10 @@ class ByteArrayTests: XCTestCase
     
     func testWriteBytes()
     {
-        var data = NSString(string: "侯坤峰侯坤峰侯坤峰侯坤峰侯坤峰侯坤峰侯坤峰侯坤峰").dataUsingEncoding(NSUTF8StringEncoding)!
-        var bytes = ByteArray(data: data)
+        let data = NSString(string: "侯坤峰侯坤峰侯坤峰侯坤峰侯坤峰侯坤峰侯坤峰侯坤峰").dataUsingEncoding(NSUTF8StringEncoding)!
+        let bytes = ByteArray(data: data)
         
-        var refer = ByteArray()
+        let refer = ByteArray()
         
         for n in 0...5000
         {
@@ -316,10 +316,10 @@ class ByteArrayTests: XCTestCase
                 refer.data.appendData(NSString(string: "larryhoularryhoularryhoularryhoularryhou").dataUsingEncoding(NSUTF8StringEncoding)!)
             }
             
-            var referOffset = Int(arc4random_uniform(UInt32(refer.length - 2)) + 1)
-            var bytesOFfset = Int(arc4random_uniform(UInt32(bytes.length)) + 1)
+            let referOffset = Int(arc4random_uniform(UInt32(refer.length - 2)) + 1)
+            let bytesOFfset = Int(arc4random_uniform(UInt32(bytes.length)) + 1)
             
-            var num = Int(arc4random_uniform(UInt32(refer.length - referOffset)) + 1)
+            let num = Int(arc4random_uniform(UInt32(refer.length - referOffset)) + 1)
             
             bytes.position = bytesOFfset
             bytes.writeBytes(refer, offset: referOffset, length: num)
@@ -335,7 +335,7 @@ class ByteArrayTests: XCTestCase
     {
         var value = M_PI
         
-        var data = NSData(bytes: &value, length: sizeof(Double))
+        let data = NSData(bytes: &value, length: sizeof(Double))
         
         var mem1 = ByteArray.dump(&value)
         var mem2 = ByteArray.dump(value)

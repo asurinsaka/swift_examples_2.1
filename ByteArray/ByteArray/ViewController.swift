@@ -15,7 +15,7 @@ class ViewController: UIViewController
     {
         super.viewDidLoad()
         
-        var bytes = ByteArray()
+        let bytes = ByteArray()
         bytes.endian = .BIG_ENDIAN
         
         bytes.writeBoolean(true)
@@ -26,14 +26,14 @@ class ViewController: UIViewController
         bytes.writeUTF("侯坤峰")
         bytes.writeUTF("侯坤峰")
         
-        println(bytes.position)
+        print(bytes.position)
         
         bytes.position = 0
-        println(bytes.readBoolean())
-        println(bytes.readUTF())
-        println(bytes.readDouble())
+        print(bytes.readBoolean())
+        print(bytes.readUTF())
+        print(bytes.readDouble())
         
-        var data = ByteArray()
+        let data = ByteArray()
         data.endian = bytes.endian
         
 //        bytes.position = 1
@@ -41,11 +41,11 @@ class ViewController: UIViewController
         
         data.writeBytes(bytes, offset: 1, length: 11)
         
-        println(data.length)
+        print(data.length)
         data.position = 0
-        println(data.readUTF())
+        print(data.readUTF())
         
-        println(ByteArray.hexe(bytes, range: NSRange(location: 0, length: bytes.length)))
+        print(ByteArray.hexe(bytes, range: NSRange(location: 0, length: bytes.length)))
     }
 
     override func didReceiveMemoryWarning()

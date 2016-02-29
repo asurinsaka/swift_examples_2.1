@@ -76,7 +76,7 @@ class ByteArray
         {
             var bytes = [UInt8](count: range.length, repeatedValue: 0)
             data.getBytes(&bytes, range: range)
-            bytes = bytes.reverse()
+            bytes = Array(bytes.reverse())
             
             value = UnsafePointer<Double>(bytes).memory
         }
@@ -99,7 +99,7 @@ class ByteArray
         {
             var bytes = [UInt8](count: range.length, repeatedValue: 0)
             data.getBytes(&bytes, range: range)
-            bytes = bytes.reverse()
+            bytes = Array(bytes.reverse())
             
             value = UnsafePointer<Float32>(bytes).memory
         }
@@ -217,7 +217,7 @@ class ByteArray
         data.getBytes(&list, range: range)
         position += range.length
         
-        var bin = bytes.data
+        let bin = bytes.data
         if offset > bytes.length
         {
             var zeros = [UInt8](count: offset - bytes.length, repeatedValue: 0)
@@ -317,7 +317,7 @@ class ByteArray
         if endian == Endian.BIG_ENDIAN
         {
             var bytes = ByteArray.dump(value)
-            bytes = bytes.reverse()
+            bytes = Array(bytes.reverse())
             
             data.replaceBytesInRange(range, withBytes: &bytes)
         }
@@ -337,7 +337,7 @@ class ByteArray
         if endian == Endian.BIG_ENDIAN
         {
             var bytes = ByteArray.dump(value)
-            bytes = bytes.reverse()
+            bytes = Array(bytes.reverse())
             
             data.replaceBytesInRange(range, withBytes: &bytes)
         }
@@ -451,9 +451,9 @@ class ByteArray
         position += range.length
     }
     
-    func writeUTF(var value:String)
+    func writeUTF(value:String)
     {
-        var num = UInt16(count(value.utf8))
+        var num = UInt16(value.utf8.count)
         if endian == Endian.BIG_ENDIAN
         {
             num = num.bigEndian
@@ -468,7 +468,7 @@ class ByteArray
         writeUTFBytes(value)
     }
     
-    func writeUTFBytes(var value:String)
+    func writeUTFBytes(value:String)
     {
         var bytes = [UInt8](value.utf8)
         
@@ -479,7 +479,7 @@ class ByteArray
         position += range.length
     }
     
-    func writeMultiBytes(var value:String, encoding:CFStringEncoding)
+    func writeMultiBytes(value:String, encoding:CFStringEncoding)
     {
         let chatset = CFStringConvertEncodingToNSStringEncoding(encoding)
         let bin = NSString(string: value).dataUsingEncoding(chatset)!
