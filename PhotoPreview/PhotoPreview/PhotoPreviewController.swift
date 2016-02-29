@@ -33,10 +33,10 @@ class PhotoPreviewController:UIViewController, UIScrollViewDelegate
 		preview.delegate = self
 		view.addSubview(preview)
 		
-		preview.pinchGestureRecognizer.addTarget(self, action: "pinchUpdated:")
+		preview.pinchGestureRecognizer!.addTarget(self, action: "pinchUpdated:")
 		setPreviewAutoLayout()
 		
-		var tap = UITapGestureRecognizer()
+		let tap = UITapGestureRecognizer()
 		tap.numberOfTapsRequired = 2
 		tap.addTarget(self, action: "doubleTapZoom:")
 		preview.addGestureRecognizer(tap)
@@ -44,10 +44,10 @@ class PhotoPreviewController:UIViewController, UIScrollViewDelegate
 	
 	func setPreviewAutoLayout()
 	{
-		var views:[NSObject:AnyObject] = [:]
+		var views:[String:AnyObject] = [:]
 		views.updateValue(preview, forKey: "preview")
 		
-		preview.setTranslatesAutoresizingMaskIntoConstraints(false)
+		preview.translatesAutoresizingMaskIntoConstraints = false
 		view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[preview]|", options: NSLayoutFormatOptions.AlignAllCenterX, metrics: nil, views: views))
 		view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[preview]|", options: NSLayoutFormatOptions.AlignAllCenterY, metrics: nil, views: views))
 	}
@@ -110,14 +110,14 @@ class PhotoPreviewController:UIViewController, UIScrollViewDelegate
 		
 		input.drawAtPoint(CGPointMake(0, 0))
 		
-		var data:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+		let data:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
 
 		UIGraphicsEndImageContext()
 		
-		var filter = CIFilter(name: "CIGaussianBlur")
-		filter.setValue(CIImage(image: data), forKey: kCIInputImageKey)
-		filter.setValue(20.0, forKey: kCIInputRadiusKey)
-		return UIImage(CIImage: filter.outputImage)
+		let filter = CIFilter(name: "CIGaussianBlur")
+		filter!.setValue(CIImage(image: data), forKey: kCIInputImageKey)
+		filter!.setValue(20.0, forKey: kCIInputRadiusKey)
+		return UIImage(CIImage: filter!.outputImage!)
 	}
 	
 	func doubleTapZoom(gesture:UITapGestureRecognizer)
@@ -239,6 +239,6 @@ class PhotoPreviewController:UIViewController, UIScrollViewDelegate
 	
 	deinit
 	{
-		preview.pinchGestureRecognizer.removeObserver(self, forKeyPath: "pinchUpdated:")
+		preview.pinchGestureRecognizer!.removeObserver(self, forKeyPath: "pinchUpdated:")
 	}
 }

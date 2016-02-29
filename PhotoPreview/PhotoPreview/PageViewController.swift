@@ -22,7 +22,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
 		delegate = self
 		
 		recycle = []
-		for i in 0..<3
+		for _ in 0..<3
 		{
 			recycle.append(PhotoPreviewController())
 		}
@@ -40,7 +40,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
 	
 	func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController?
 	{
-		let current = viewController as PhotoPreviewController
+		let current = viewController as! PhotoPreviewController
 		if current.dataIndex + 1 < PHOTO_COUNT
 		{
 			dataIndex = current.dataIndex + 1
@@ -52,7 +52,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
 	
 	func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController?
 	{
-		let current = viewController as PhotoPreviewController
+		let current = viewController as! PhotoPreviewController
 		if current.dataIndex > 0
 		{
 			dataIndex = current.dataIndex - 1
@@ -73,9 +73,9 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
 	}
 	
 	//MARK: reset state
-	func pageViewController(pageViewController: UIPageViewController, willTransitionToViewControllers pendingViewControllers: [AnyObject])
+	func pageViewController(pageViewController: UIPageViewController, willTransitionToViewControllers pendingViewControllers: [UIViewController])
 	{
-		var dst = pendingViewControllers.first! as PhotoPreviewController
+		let dst = pendingViewControllers.first! as! PhotoPreviewController
 		dst.dirty = true
 	}
 

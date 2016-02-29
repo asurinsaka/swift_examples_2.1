@@ -21,10 +21,17 @@ bug unfixed in photoviewcontroller.swift. line 127-143
 
 <img src="LocateMe.png" width="200">
 
+## Photo Preview
+
+<img src="PhotoPreview.png" width="200">
 ## Simple TableView
 <img src="SimpleTableView1.png" width="200">
 <img src="SimpleTableView2.png" width="200">
 
 ## Video Player
 <img src="VideoPlayer.png" width="200">
+
+Thanks to
+[Sample Video](http://www.sample-videos.com "Sample Video").
+
 
