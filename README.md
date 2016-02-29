@@ -6,4 +6,12 @@ This one original from https://github.com/larryhou/swift is so far the best one 
 
 ## AutoLayout
 
-<img src="autolayout.png" width="200">
+<img src="AutoLayout.png" width="200">
+
+## AVprogramming
+
+<img src="AVprogramming1.png" width="200">
+<img src="AVprogramming2.png" width="200">
+
+bug unfixed in photoviewcontroller.swift. line 127-143
+
