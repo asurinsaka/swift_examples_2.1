@@ -6,7 +6,7 @@ This one original from https://github.com/larryhou/swift is so far the best one 
 
 ## AutoLayout
 
-<img src="AutoLayout.png" width="200">
+<img src="autolayout.png" width="200">
 
 ## AVprogramming
 
