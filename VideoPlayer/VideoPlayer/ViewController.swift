@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import Foundation
 
-extension CMTime:Printable
+extension CMTime:CustomStringConvertible
 {
 	public var description:String
 	{
@@ -65,14 +65,14 @@ class ViewController: UIViewController, AVAssetResourceLoaderDelegate
 	{
 		super.viewDidLoad()
 		
-		let url = NSURL(string: "http://localhost/videos/01.mp4")!
+		let url = NSURL(string: "http://www.sample-videos.com/video/mp4/240/big_buck_bunny_240p_1mb.mp4")!
 		self.title = url.absoluteString
 		
 		let asset = AVURLAsset(URL: url, options: nil)
 		asset.resourceLoader.setDelegate(self, queue: dispatch_get_main_queue())
 		asset.loadValuesAsynchronouslyForKeys(["duration"])
 		{
-			println("duration:" + asset.duration.description)
+			print("duration:" + asset.duration.description)
 			self.duration = asset.duration
 		}
 		
@@ -109,7 +109,7 @@ class ViewController: UIViewController, AVAssetResourceLoaderDelegate
 	
 	func panGuestureChanged(guesture:UIPanGestureRecognizer)
 	{
-		println(guesture)
+		print(guesture)
 		switch guesture.state
 		{
 			case .Began:
@@ -122,7 +122,7 @@ class ViewController: UIViewController, AVAssetResourceLoaderDelegate
 			
 			case .Changed:
 				let point = guesture.locationInView(view)
-				var rate = CGFloat(player.rate) + 2 * (point.x - origin.x) / view.frame.width
+				let rate = CGFloat(player.rate) + 2 * (point.x - origin.x) / view.frame.width
 				player.rate = Float(rate)
 				break
 				
@@ -160,12 +160,12 @@ class ViewController: UIViewController, AVAssetResourceLoaderDelegate
 		player.play()
 	}
 	
-	override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>)
+	override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>)
 	{
 		if context == &ItemStatusContext
 		{
 			let playerItem = object as! AVPlayerItem
-			println(playerItem.status.description)
+			print(playerItem.status.description)
 			
 			if playerItem.status == AVPlayerItemStatus.ReadyToPlay
 			{
@@ -180,11 +180,11 @@ class ViewController: UIViewController, AVAssetResourceLoaderDelegate
 	
 	func describeVideo(item:AVPlayerItem)
 	{
-		println(item.tracks)
-		println("canPlayerFastForward: \(item.canPlayFastForward)")
-		println("canPlayFastReverse: \(item.canPlayFastReverse)")
-		println("canPlaySlowForward: \(item.canPlaySlowForward)")
-		println("canPlaySlowReverse: \(item.canPlaySlowReverse)")
+		print(item.tracks)
+		print("canPlayerFastForward: \(item.canPlayFastForward)")
+		print("canPlayFastReverse: \(item.canPlayFastReverse)")
+		print("canPlaySlowForward: \(item.canPlaySlowForward)")
+		print("canPlaySlowReverse: \(item.canPlaySlowReverse)")
 	}
 	
 	//MARK: rotation
@@ -194,16 +194,16 @@ class ViewController: UIViewController, AVAssetResourceLoaderDelegate
 	}
 	
 	//MARK: AVAssetResourceLoaderDelegate
-	func resourceLoader(resourceLoader: AVAssetResourceLoader!, shouldWaitForResponseToAuthenticationChallenge authenticationChallenge: NSURLAuthenticationChallenge!) -> Bool
+	func resourceLoader(resourceLoader: AVAssetResourceLoader, shouldWaitForResponseToAuthenticationChallenge authenticationChallenge: NSURLAuthenticationChallenge) -> Bool
 	{
 		let protectionSpace = authenticationChallenge.protectionSpace
 		
-		println(protectionSpace.authenticationMethod!)
+		print(protectionSpace.authenticationMethod)
 		if protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust
 		{
-			let credential = NSURLCredential(forTrust: protectionSpace.serverTrust)
-			authenticationChallenge.sender.useCredential(credential, forAuthenticationChallenge: authenticationChallenge)
-			authenticationChallenge.sender.continueWithoutCredentialForAuthenticationChallenge(authenticationChallenge)
+			let credential = NSURLCredential(forTrust: protectionSpace.serverTrust!)
+			authenticationChallenge.sender!.useCredential(credential, forAuthenticationChallenge: authenticationChallenge)
+			authenticationChallenge.sender!.continueWithoutCredentialForAuthenticationChallenge(authenticationChallenge)
 		}
 		
 		return true

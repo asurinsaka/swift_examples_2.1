@@ -4,7 +4,7 @@ I was trying to learn swift and to find some swift examples to learn from.  And 
 
 This one original from https://github.com/larryhou/swift is so far the best one I can find. But it is from swift 1. I do not know how to contribute to the original fork(maybe later  I would merge mine to it. For now I would just build in my own account.
 
-## AutoLayout
+## Auto Layout
 
 <img src="autolayout.png" width="200">
 
@@ -15,13 +15,16 @@ This one original from https://github.com/larryhou/swift is so far the best one 
 
 bug unfixed in photoviewcontroller.swift. line 127-143
 
-## ByteArray
+## Byte Array
 
-## LocateMe
+## Locate Me
 
 <img src="LocateMe.png" width="200">
 
-## SimpleTableView
+## Simple TableView
 <img src="SimpleTableView1.png" width="200">
 <img src="SimpleTableView2.png" width="200">
+
+## Video Player
+<img src="VideoPlayer.png" width="200">
 
