@@ -21,7 +21,7 @@ class PhotoCell:UITableViewCell
 	var representation:ALAssetRepresentation!
 }
 
-class PhotoViewController: UITableViewController, UITableViewDataSource
+class PhotoViewController: UITableViewController
 {
 	var url:NSURL!
 	private var _numOfAssets:Int = 0
@@ -47,7 +47,7 @@ class PhotoViewController: UITableViewController, UITableViewDataSource
 			}
 		})
 		{ (error:NSError!) -> Void in
-			println(error)
+			print(error)
 		}
 	}
 	
@@ -117,30 +117,30 @@ class PhotoViewController: UITableViewController, UITableViewDataSource
 			})
 		})
 		{ (error:NSError!) -> Void in
-			println(error)
+			print(error)
 		}
 		return cell
 	}
 	
 	func geocode(location:CLLocation, label:UILabel)
 	{
-		var query = CLGeocoder()
-		query.reverseGeocodeLocation(location, completionHandler:
-		{ (result:[AnyObject]!, error:NSError!) -> Void in
-			if error == nil && result.count > 0
-			{
-				let placemark = result.first as! CLPlacemark
-				let text = (placemark.addressDictionary["FormattedAddressLines"] as! [String])[0]
-				if text != ""
-				{
-					dispatch_async(dispatch_get_main_queue())
-					{
-						label.text = text
-					}
-				}
-				
-			}
-		})
+//		let query = CLGeocoder()
+//		query.reverseGeocodeLocation(location, completionHandler:
+//            { (result: [CLPlacemark]?, error: NSError?) -> Void in
+//			if error == nil && result!.count > 0
+//			{
+//				let placemark = result!.first!
+//				let text = ABCreateStringWithAddressDictionary(placemark.addressDictionary, false)
+//				if text != ""
+//				{
+//					dispatch_async(dispatch_get_main_queue())
+//					{
+//						label.text = text
+//					}
+//				}
+//				
+//			}
+//		})
 	}
 	
 	//MARK: segue
@@ -148,10 +148,10 @@ class PhotoViewController: UITableViewController, UITableViewDataSource
 	{
 		if segue.identifier == "showAsset"
 		{
-			let indexPath = tableView.indexPathForSelectedRow()!
+			let indexPath = tableView.indexPathForSelectedRow!
 			let row = (_numOfAssets - 1) - indexPath.row
 			
-			var dst = segue.destinationViewController as! AssetViewController
+			let dst = segue.destinationViewController as! AssetViewController
 			dst.index = row
 			dst.url = url
 			

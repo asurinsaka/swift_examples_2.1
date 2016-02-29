@@ -14,8 +14,8 @@ import UIKit
 class MapPinAnnotation:NSObject, MKAnnotation
 {
 	dynamic var coordinate:CLLocationCoordinate2D
-	dynamic var title:String
-	dynamic var subtitle:String
+	dynamic var title:String?
+	dynamic var subtitle:String?
 	
 	init(coordinate:CLLocationCoordinate2D)
 	{
@@ -73,7 +73,7 @@ class AssetViewController:UIViewController, UIScrollViewDelegate, MKMapViewDeleg
 				let bounds = UIScreen.mainScreen().bounds
 				let scale = max(CGFloat(CGImageGetWidth(data)) / bounds.width, CGFloat(CGImageGetHeight(data)) / bounds.height)
 				
-				let image = UIImage(CGImage: data, scale:scale,orientation:UIImageOrientation.Up)!
+				let image = UIImage(CGImage: data, scale:scale,orientation:UIImageOrientation.Up)
 				
 				let location = asset.valueForProperty(ALAssetPropertyLocation) as? CLLocation
 				dispatch_async(dispatch_get_main_queue())
@@ -112,7 +112,7 @@ class AssetViewController:UIViewController, UIScrollViewDelegate, MKMapViewDeleg
 			})
 		})
 		{ (error:NSError!) -> Void in
-			println(error)
+			print(error)
 		}
 		
 		_tap = UILongPressGestureRecognizer()
@@ -123,12 +123,12 @@ class AssetViewController:UIViewController, UIScrollViewDelegate, MKMapViewDeleg
 	
 	func trace(representation:ALAssetRepresentation)
 	{
-		println("------------------------------")
-		println(representation.url().absoluteString)
-		println(representation.UTI())
+		print("------------------------------")
+		print(representation.url().absoluteString)
+		print(representation.UTI())
 		for (key, value) in representation.metadata()
 		{
-			println((key, value))
+			print((key, value))
 		}
 	}
 	
@@ -153,12 +153,12 @@ class AssetViewController:UIViewController, UIScrollViewDelegate, MKMapViewDeleg
 	
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator)
 	{
-		println(size)
+		print(size)
 		
 		var frame = _photo.frame
 		if _photo.image != nil
 		{
-			var scale = size.width / frame.width
+			let scale = size.width / frame.width
 			frame.size.height *= scale
 			frame.size.width *= scale
 			_photo.frame = frame
@@ -174,7 +174,7 @@ class AssetViewController:UIViewController, UIScrollViewDelegate, MKMapViewDeleg
 	
 	//MARK: Map Annotation
 	
-	func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView!
+	func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
 	{
 		if annotation.isKindOfClass(MapPinAnnotation)
 		{
@@ -195,20 +195,20 @@ class AssetViewController:UIViewController, UIScrollViewDelegate, MKMapViewDeleg
 		return nil
 	}
 	
-	func mapView(mapView: MKMapView!, didAddAnnotationViews views: [AnyObject]!)
+	func mapView(mapView: MKMapView, didAddAnnotationViews views: [MKAnnotationView])
 	{
-		var view = views.first as! MKPinAnnotationView
-		let coordinate = view.annotation.coordinate
+		let view = views.first as! MKPinAnnotationView
+		let coordinate = view.annotation!.coordinate
 		
-		_map.selectAnnotation(view.annotation, animated: true)
+		_map.selectAnnotation(view.annotation!, animated: true)
 		
 		CLGeocoder().reverseGeocodeLocation(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
-		{ (result:[AnyObject]!, error:NSError!) in
+            { (result: [CLPlacemark]?, error: NSError?) -> Void in
 				
-			if result != nil && result.count > 0
+			if result != nil && result!.count > 0
 			{
-				let placemark = result.first as! CLPlacemark
-				let title = (placemark.addressDictionary["FormattedAddressLines"] as! [String])[0]
+				let placemark = result!.first! as CLPlacemark
+				let title = (placemark.addressDictionary!["FormattedAddressLines"] as! [String])[0]
 				dispatch_async(dispatch_get_main_queue())
 				{
 					(view.annotation as! MapPinAnnotation).title = title

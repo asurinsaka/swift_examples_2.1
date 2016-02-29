@@ -24,16 +24,16 @@ class NavigationViewController:UINavigationController
 {
 	override func shouldAutorotate() -> Bool
 	{
-		return topViewController.shouldAutorotate()
+		return topViewController!.shouldAutorotate()
 	}
 	
 	override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation
 	{
-		return topViewController.preferredInterfaceOrientationForPresentation()
+		return topViewController!.preferredInterfaceOrientationForPresentation()
 	}
 }
 
-class PhotoAlubmViewController: UITableViewController, UITableViewDataSource
+class PhotoAlubmViewController: UITableViewController
 {
 	private var _groups:[NSURL]!
 	private var _library:ALAssetsLibrary!
@@ -61,7 +61,7 @@ class PhotoAlubmViewController: UITableViewController, UITableViewDataSource
 		}, failureBlock:
 		{
 			(error:NSError!) in
-			println(error)
+			print(error)
 		})
 
 	}
@@ -92,7 +92,7 @@ class PhotoAlubmViewController: UITableViewController, UITableViewDataSource
 		}, failureBlock:
 		{
 			(error:NSError!) in
-			println((error, url.absoluteString))
+			print((error, url.absoluteString))
 		})
 
 		return cell
@@ -103,9 +103,9 @@ class PhotoAlubmViewController: UITableViewController, UITableViewDataSource
 	{
 		if segue.identifier == "showAlbumPhotos"
 		{
-			let indexPath = tableView.indexPathForSelectedRow()!
+			let indexPath = tableView.indexPathForSelectedRow!
 			
-			var dst = segue.destinationViewController as! PhotoViewController
+			let dst = segue.destinationViewController as! PhotoViewController
 			dst.url = _groups[indexPath.row]
 			
 			tableView.deselectRowAtIndexPath(indexPath, animated: false)
