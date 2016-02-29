@@ -6,4 +6,4 @@ This one original from https://github.com/larryhou/swift is so far the best one 
 
 ## AutoLayout
 
-![Alt text](autolayout.png =326x245 )
+![](autolayout.png =326x245 )
