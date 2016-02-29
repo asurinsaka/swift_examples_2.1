@@ -33,7 +33,7 @@ class ViewController: UIViewController
 	{
 		let now = NSDate.timeIntervalSinceReferenceDate()
 		
-		println(now - laststamp)
+		print(now - laststamp)
 		
 		laststamp = now
 		if now - startstamp >= 30.0

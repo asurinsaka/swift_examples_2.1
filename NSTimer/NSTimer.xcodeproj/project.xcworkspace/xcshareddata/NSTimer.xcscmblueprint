@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "39D7C6B884B12892CFEB8B8282D9B78241DDBEB4",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "CD17B85DD1B975D40720D97E46FD818042A29716" : 0,
+    "39D7C6B884B12892CFEB8B8282D9B78241DDBEB4" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "13780619-D575-4900-8D50-59A948800AEC",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "CD17B85DD1B975D40720D97E46FD818042A29716" : "swift",
+    "39D7C6B884B12892CFEB8B8282D9B78241DDBEB4" : "swift_examples_2.1\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "NSTimer",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "NSTimer\/NSTimer.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/asurinsaka\/swift_examples_2.1.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "39D7C6B884B12892CFEB8B8282D9B78241DDBEB4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:larryhou\/swift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "CD17B85DD1B975D40720D97E46FD818042A29716"
+    }
+  ]
+}
